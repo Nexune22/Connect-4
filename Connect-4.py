@@ -74,3 +74,4 @@ while True:
                 number_of_tries += 1
             else:
                 print("The board is full!")
+                break
