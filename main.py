@@ -20,6 +20,7 @@ def createModel():
 
 def getPrediction(model, board, answer):
     flat = np.array(board).flatten().reshape(1, -1)
-    return int(model.predict(flat)[0])
+    return int(model.predict(flat)[answer])
+
 
 
