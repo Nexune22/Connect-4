@@ -9,7 +9,6 @@ board = [['-','-','-','-','-','-'],
          ['-','-','-','-','-','-'],
          ['-','-','-','-','-','-']]
 
-loop = True
 first_player = True
 model = main.createModel()
 
@@ -27,7 +26,7 @@ def get_ai_input(value):
 def play_turn(column):
     global first_player
 
-    while loop:
+    while True:
 
         free_slot = 0
         for y in range(7):
@@ -37,7 +36,7 @@ def play_turn(column):
 
         if column >= 7 or column <= 0:
             print("Invalid Input")
-
+            return False
 
         elif free_slot <= 6:
             if first_player:
