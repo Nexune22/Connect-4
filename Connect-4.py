@@ -1,3 +1,5 @@
+import time
+
 board = [['-','-','-','-','-','-'],
          ['-','-','-','-','-','-'],
          ['-','-','-','-','-','-'],
@@ -32,3 +34,4 @@ while loop:
 
     for x in range(len(board)):
         print(board[x])
+         time.sleep(1)
