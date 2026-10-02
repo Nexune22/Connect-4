@@ -34,4 +34,4 @@ while loop:
 
     for x in range(len(board)):
         print(board[x])
-         time.sleep(1)
+        time.sleep(1)
