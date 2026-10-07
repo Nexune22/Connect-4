@@ -1,77 +1,68 @@
+import AI_Model
 import time
-import main
 
-board = [['-','-','-','-','-','-'],
-         ['-','-','-','-','-','-'],
-         ['-','-','-','-','-','-'],
-         ['-','-','-','-','-','-'],
-         ['-','-','-','-','-','-'],
-         ['-','-','-','-','-','-'],
-         ['-','-','-','-','-','-']]
+board = [['-','-','-','-','-','-','-'],
+         ['-','-','-','-','-','-','-'],
+         ['-','-','-','-','-','-','-'],
+         ['-','-','-','-','-','-','-'],
+         ['-','-','-','-','-','-','-'],
+         ['-','-','-','-','-','-','-']]
 
 first_player = True
-model = main.createModel()
-
-
+model = AI_Model.createModel()
 
 
 def get_user_input():
-    column = int(input("Column: ")) - 1
+    column = int(input("It is now your turn. Enter the column that you would like to play: ")) - 1
     return column
 
-def get_ai_input(value):
-    prediction = main.getPrediction(model, board, value)
-    return prediction
 
 def play_turn(column):
     global first_player
 
-    while True:
+    if column < 0 or column > 6:
+        print("Invalid Input")
+        return False
 
-        free_slot = 0
-        for y in range(7):
-            if board[y][column] != '-':
-                free_slot = free_slot + 1
-                print(free_slot)
+    if board[0][column] != '-':
+        print("Column is full, select again.")
+        return False
 
-        if column >= 7 or column <= 0:
-            print("Invalid Input")
-            return False
+    # find the lowest empty slot in the column
+    row = 5
+    while board[row][column] != '-':
+        row = row - 1
 
-        elif free_slot <= 6:
-            if first_player:
-                board[6 - free_slot][column] = 'x'
-                first_player = False
-            else:
-                board[6 - free_slot][column] = 'o'
-                first_player = True
-        else:
-            print("Row is Full, Select Again.")
-            return False
+    if first_player:
+        board[row][column] = 'x'
+        first_player = False
+    else:
+        board[row][column] = 'o'
+        first_player = True
 
-        for x in range(len(board)):
-            print(board[x])
-            time.sleep(1)
+    printBoard(board)
+    return True
 
-        return True
 
+def printBoard(board):
+    for x in range(len(board)):
+        print(board[x])
+    print()
 
 # Main game loop
-while True:
-    success = False
+printBoard(board)
 
-    if first_player == True:
+while True:
+    if '-' not in board[0]:
+        print("The board is full!")
+        break
+
+    if first_player:
+        success = False
         while success == False:
             turn = get_user_input()
             success = play_turn(turn)
-
     else:
-        number_of_tries = 0
-        while success == False:
-            if number_of_tries <= 6:
-                turn = main.getPrediction(model, board, number_of_tries)
-                success = play_turn(turn)
-                number_of_tries += 1
-            else:
-                print("The board is full!")
-                break
+        turn = AI_Model.getPrediction(model, board, 2)
+        play_turn(turn)
+        time.sleep(2)
