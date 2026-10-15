@@ -92,6 +92,7 @@ def evaluate_connect_four(board):
     return score
 
 def alpha_beta_connect_four(board, depth, alpha, beta, is_maximising):
+    # Where 'o' is the AI piece and 'x' is the player
     if checkWinner(board, 'o'):
         return 1_000_000 + depth
     if checkWinner(board, 'x'):
