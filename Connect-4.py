@@ -72,8 +72,8 @@ def evaluate_connect_four(board):
     score = 0
 
     # Award centre column (most winning lines)
-    score += 3 * [board[row][4] for row in range(6)].count('o')
-    score -= 3 * [board[row][4] for row in range(6)].count('x')
+    score += 3 * [board[row][3] for row in range(6)].count('o')
+    score -= 3 * [board[row][3] for row in range(6)].count('x')
     
     # Score by horizontal
     for row in range(6):
