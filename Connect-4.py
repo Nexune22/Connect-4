@@ -144,12 +144,10 @@ FirstPlayer = True
 
 while loop:
     if FirstPlayer:
-        column = int(input("Column: ")) - 1
-        if column >= 7 or column < 0:
-            print("Invalid input.")
-            continue
+        print("ML RandomForest Turn") 
+        column = #machine learning variant
     else:
-        print("AI is thinking")
+        print("AB Pruning Turn") 
         column = choose_ai_move(board)
 
     free_slot = 0
