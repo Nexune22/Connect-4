@@ -1,5 +1,12 @@
 import time
 import math
+import AI_Model
+
+model = AI_Model.createModel()
+
+ABP = 'o'
+OPP = 'x' if ABP == 'o' else 'o'
+MLRF = 1 if ABP = 'o' else 2
 
 board = [['-','-','-','-','-','-','-'],
          ['-','-','-','-','-','-','-'],
@@ -30,9 +37,6 @@ def isFull(board):
             return False
     return True
 
-def isGameOver(board):
-    return checkWinner(board, 'o') or checkWinner(board, 'x') or isFull(board)
-
 # -------------
 
 def generateMoves(board):
@@ -54,8 +58,8 @@ def undoMove(board, col):
 # -------------
 
 def score_window(window):
-    ai = window.count('o')
-    human = window.count('x')
+    ai = window.count(ABP)
+    human = window.count(OPP)
     empty = window.count('-')
 
     if ai == 3 and empty == 1:
@@ -72,8 +76,8 @@ def evaluate_connect_four(board):
     score = 0
 
     # Award centre column (most winning lines)
-    score += 3 * [board[row][3] for row in range(6)].count('o')
-    score -= 3 * [board[row][3] for row in range(6)].count('x')
+    score += 3 * [board[row][3] for row in range(6)].count(ABP)
+    score -= 3 * [board[row][3] for row in range(6)].count(OPP)
     
     # Score by horizontal
     for row in range(6):
@@ -93,9 +97,9 @@ def evaluate_connect_four(board):
 
 def alpha_beta_connect_four(board, depth, alpha, beta, is_maximising):
     # Where 'o' is the AI piece and 'x' is the player
-    if checkWinner(board, 'o'):
+    if checkWinner(board, ABP):
         return 1_000_000 + depth
-    if checkWinner(board, 'x'):
+    if checkWinner(board, OPP):
         return -1_000_000 - depth
     if isFull(board):
         return 0
@@ -105,7 +109,7 @@ def alpha_beta_connect_four(board, depth, alpha, beta, is_maximising):
     if is_maximising:
         best_score = -math.inf
         for move in generateMoves(board):
-            makeMove(board, move, 'o')
+            makeMove(board, move, ABP)
             score = alpha_beta_connect_four(board, depth - 1, alpha, beta, False)
             undoMove(board, move)
             best_score = max(score, best_score)
@@ -116,7 +120,7 @@ def alpha_beta_connect_four(board, depth, alpha, beta, is_maximising):
     else:
         best_score = math.inf
         for move in generateMoves(board):
-            makeMove(board, move, 'x')
+            makeMove(board, move, OPP)
             score = alpha_beta_connect_four(board, depth - 1, alpha, beta, True)
             undoMove(board, move)
             best_score = min(score, best_score)
@@ -129,7 +133,7 @@ def choose_ai_move(board, depth=SEARCH_DEPTH):
     best_score = -math.inf
     best_move = None
     for move in generateMoves(board):
-        makeMove(board, move, 'o')
+        makeMove(board, move, ABP)
         score = alpha_beta_connect_four(board, depth - 1, -math.inf, math.inf, False)
         undoMove(board, move)
         if score > best_score:
@@ -145,7 +149,7 @@ FirstPlayer = True
 while loop:
     if FirstPlayer:
         print("ML RandomForest Turn") 
-        column = #machine learning variant
+        column = AI_Model.getPrediction(model, board, 1)
     else:
         print("AB Pruning Turn") 
         column = choose_ai_move(board)
@@ -158,10 +162,10 @@ while loop:
  
     if free_slot < 6:
         if FirstPlayer:
-            board[5 - free_slot][column] = 'x'
+            board[5 - free_slot][column] = OPP
             FirstPlayer = False
         else:
-            board[5 - free_slot][column] = 'o'
+            board[5 - free_slot][column] = ABP
             FirstPlayer = True
     else:
         print("Column is Full, Select Again.")
@@ -170,17 +174,12 @@ while loop:
     for x in range(len(board)):
         print(board[x])
  
-    if checkWinner(board, 'x'):
-        print("You win!")
+    if checkWinner(board, OPP):
+        print("ML RF Wins")
         loop = False
-    elif checkWinner(board, 'o'):
-        print("The AI wins!")
+    elif checkWinner(board, ABP):
+        print("ABP Wins")
         loop = False
     elif isFull(board):
         print("It's a draw!")
         loop = False
-
-
-    for x in range(len(board)):
-        print(board[x])
-        time.sleep(1)
