@@ -63,7 +63,7 @@ def check_winner(board, piece):
 
 
 def print_board(board):
-    print("1   2   3   4   5   6   7")
+    print("\033[36m1   2   3   4   5   6   7\033[0m")
     print()
     for x in range(len(board)):
         for y in range(len(board[x])):
